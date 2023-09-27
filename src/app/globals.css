@@ -25,3 +25,12 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* @layer components {
+  .agency {
+    @apply text-orange-500 text-xl font-bold ;
+  }
+  .design {
+    @apply text-black text-xl font-bold ;
+  }
+} */
