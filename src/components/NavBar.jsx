@@ -1,8 +1,22 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { deleteCookie, getCookie } from "cookies-next";
+import { useState } from "react";
 
 const NavBar = () => {
+  const [cookieToken, setCookieToken] = useState(getCookie("token"));
+  const [cookieGit, setCookieGit] = useState(getCookie("next-auth.csrf-token"));
+  const router = useRouter();
+  const logoutControl = () => {
+    deleteCookie("token");
+    deleteCookie("next-auth.csrf-token");
+    router.replace("/");
+    setCookieToken(getCookie("token"));
+    setCookieGit(getCookie("next-auth.csrf-token"));
+  };
+
   const NavClick = () => {
     // open
     const burger = document.querySelectorAll(".navbar-burger");
@@ -138,30 +152,22 @@ const NavBar = () => {
             </Link>
           </li>
 
-          <li>
-            <Link
-              className={
-                current === "/"
-                  ? "text-sm text-white bg-green-500 hover:bg-green-400 transition-all font-bold px-5 py-2 rounded-md"
-                  : "text-sm text-black font-semibold transition-all border border-green-500 hover:text-gray-500 hover:border-none px-5 py-2 rounded-md"
-              }
-              href={"/"}
-            >
-              Login
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              className={
-                current === "/"
-                  ? "text-sm text-white bg-orange-500 hover:bg-orange-400 transition-all font-bold px-5 py-2 rounded-md"
-                  : "text-sm text-black bg-orange-500 hover:bg-orange-400 transition-all font-bold px-5 py-2 rounded-md"
-              }
-              href={"/"}
-            >
-              Register
-            </Link>
+          <li className="cursor-pointer">
+            {!!cookieToken || !!cookieGit ? (
+              <span
+                className="text-sm text-white bg-orange-500 hover:bg-orange-400 transition-all font-bold px-5 py-2 rounded-md"
+                onClick={logoutControl}
+              >
+                Logout
+              </span>
+            ) : (
+              <Link
+                href={"/login"}
+                className="text-sm text-white bg-green-500 hover:bg-green-400 transition-all font-bold px-5 py-2 rounded-md"
+              >
+                Login
+              </Link>
+            )}
           </li>
         </ul>
       </nav>
@@ -253,18 +259,9 @@ const NavBar = () => {
               <li className="mb-1">
                 <Link
                   className="mt-5 block p-4 text-sm font-semibold bg-green-500 text-white hover:bg-green-400 rounded-md"
-                  href={"/"}
+                  href={"/login"}
                 >
                   Login
-                </Link>
-              </li>
-
-              <li className="mb-1">
-                <Link
-                  className="mt-5 block p-4 text-sm font-semibold bg-orange-500 text-white hover:bg-orange-400 rounded-md"
-                  href={"/"}
-                >
-                  Register
                 </Link>
               </li>
             </ul>
